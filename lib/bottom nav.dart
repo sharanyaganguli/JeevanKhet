@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app/Teaching.dart';
+import 'package:my_app/subsidy.dart';
 import 'package:my_app/values.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
@@ -25,7 +26,7 @@ class _BottomNavState extends State<BottomNav> {
     Log(),
     MainAdvice(),
     Teaching(),
-    Home(),
+    Subsidy(),
   ];
 
   @override

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:my_app/products.dart';
 import 'package:my_app/values.dart';
 
@@ -41,10 +42,13 @@ class _HomeState extends State<Home>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('JeevanKhet',
+        title: Text(translate("app_title"),
         style: TextStyle(fontWeight: FontWeight.w700),),
         backgroundColor:  Color(0xFF969A2A),
-        centerTitle: true,
+        // centerTitle: true,
+        actions: [
+          IconButton(onPressed: (){}, icon: Icon(Icons.person))
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -52,35 +56,32 @@ class _HomeState extends State<Home>{
           child: Column(
             children: [
               SizedBox(height: 10),
-              Text('Welcome',
+              Text(translate('home.welcome_message'),
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),),
               SizedBox(height: 10),
               Image.asset('assets/farm icon.png'),
               SizedBox(height: 20),
-              Text('What is our app?',
+              Text(translate('home.what_app.title'),
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),),
               SizedBox(height: 10),
-              Text('🌱 Smarter Farming, Bigger Profits',
+              Text('🌱 ${translate('home.what_app.sub_title')}',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),),
               SizedBox(height: 10),
-              Text('Our app helps you farm better using less water, the right crops, and fair prices. It shows you what to grow, how much to use, and how to sell at the best rate.',
+              Text( translate('home.what_app.para'),
               style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
               SizedBox(height: 20),
               Divider(),
               SizedBox(height: 20),
-              Text('🌱 Grow Your Plant, Grow a Habit',
+              Text(translate('home.game.title'),
                 style: TextStyle(fontWeight: FontWeight.w600),),
-              Text('Log each sustainable activity in your daily tracker.',
+              Text('home.game.sub_title',
                 textAlign: TextAlign.center,),
               SizedBox(height: 10),
               Image.asset('assets/plant game.png',
               width:150, height: 150, ),
               SizedBox(height: 20),
-              Text('🌿 Watch It Thrive', 
-              style: TextStyle(fontWeight: FontWeight.w600),),
-              Text('Your plant grows a little more every time you choose sustainability.',
-              textAlign: TextAlign.center,),
-        
+
+
             ],
           ),
         ),

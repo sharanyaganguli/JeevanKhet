@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:my_app/products.dart';
 import 'package:my_app/main advice.dart';
 import 'package:my_app/values.dart';
@@ -60,8 +61,7 @@ class _TeachingState extends State<Teaching> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Heading
-            Text(
-              'What would you like to learn?',
+            Text( translate('teaching.title'),
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -73,7 +73,7 @@ class _TeachingState extends State<Teaching> {
 
             // Subtitle
             Text(
-              'Learning about sustainability helps save our planet for the youth. Press any button and learn a new skill',
+              translate('teaching.sub_title'),
               style: TextStyle(
                 fontSize: 15,
                 color: Colors.black54,
@@ -86,9 +86,9 @@ class _TeachingState extends State<Teaching> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TeachingCard("Sustainable Fertilizers", "dogs.jpeg", lightThemeColor),
+                TeachingCard(translate("teaching.card1"), "fertilizer.png", lightThemeColor),
                 SizedBox(width: 20),
-                TeachingCard("Pest Control", "plant game.png", lightThemeColor),
+                TeachingCard(translate("teaching.card2"), "plant game.png", lightThemeColor),
               ],
             ),
             SizedBox(height: 20),
@@ -96,9 +96,9 @@ class _TeachingState extends State<Teaching> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TeachingCard("Sustainable Fertilizers", "dogs.jpeg", lightThemeColor),
+                TeachingCard(translate("teaching.card3"), "seeds.jpg", lightThemeColor),
                 SizedBox(width: 20),
-                TeachingCard("Pest Control", "plant game.png", lightThemeColor),
+                TeachingCard(translate("teaching.card4"), "soil.png", lightThemeColor),
               ],
             ),
             SizedBox(height: 20),
@@ -106,23 +106,12 @@ class _TeachingState extends State<Teaching> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TeachingCard("Sustainable Fertilizers", "dogs.jpeg", lightThemeColor),
+                TeachingCard(translate("teaching.card5"), "pesticide.png", lightThemeColor),
                 SizedBox(width: 20),
-                TeachingCard("Pest Control", "plant game.png", lightThemeColor),
+                TeachingCard(translate("teaching.card6"), "crops.png", lightThemeColor),
+
               ],
             )
-
-            /*_buildLearningButton("Sustainable Fertilizers", FertilizerTeacher()),
-
-            _buildLearningButton("How to pest control", PestControlTeacher()),
-
-            _buildLearningButton("How to sustainably use water", WaterTeacher()),
-
-            _buildLearningButton("Seed Saving", SeedTeacher()),
-
-            _buildLearningButton("Extra crops", CropTeacher()),*/
-
-
 
 
           ],

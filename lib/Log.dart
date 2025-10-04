@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 
 class Log extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _LogState extends State<Log> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('JeevanKhet',
+        title: Text(translate('Sustainability Game'),
             style: TextStyle(fontWeight: FontWeight.w700)),
         backgroundColor: Color(0xFF969A2A),
         centerTitle: true,
@@ -28,35 +29,10 @@ class _LogState extends State<Log> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 10),
-            Text("Sustainability Log",
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20), textAlign: TextAlign.center,),
-            SizedBox(height: 15),
-            Text(
-              "The more practices you do, the more your plant grows! Every week grow a new plant.",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
-
-            // Checklist items
-            CheckboxListTile(
-              title: Text("Used organic fertilizer instead of chemical fertilizer"),
-              value: fertilizer,
-              onChanged: (bool? value) {
-                setState(() {
-                  fertilizer = value ?? false;
-                });
-              },
-            ),
-
-            SizedBox(height: 20,),
-
-            SizedBox(height: 10),
-            Text("The Sustainability Game",
+            Text(translate("log.title"),
               style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20), textAlign: TextAlign.center,),
             SizedBox(height: 15),
-            Text(
-              "To play the game, select one of the best options to help your plant grow! Every week you get a new one",
+            Text(translate("log.sub_title"),
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500), textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),

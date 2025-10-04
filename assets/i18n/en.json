@@ -1,0 +1,43 @@
+{
+  "app_title": "JeevanKhet",
+  "home": {
+    "welcome_message": "Welcome",
+    "what_app": {
+      "title": "What is our app?",
+      "sub_title": "Smarter Farming, Better Profits",
+      "para": "Our app helps you farm better using less water, the right crops, and fair prices. It shows you what to grow, how much to use, and how to sell at the best rate.",
+    "game": {
+      "title": " 🌱Grow Your Plant, Grow a Habit",
+      "sub_title": "Play the PlantLife game and see your your decisions affect a plant."
+    }
+    }
+
+  },
+  "log": {
+    "title": "The PlantLife Game",
+    "sub_title": "To play the game, select one of the best options to help your plant grow! Every week you get a new one"
+  },
+
+  "advice": {
+    "title": "🧑🏽‍🌾 What help do you need today?",
+    "sub_title": "Tap a button and I’ll guide you step by step",
+    "button1": "Ready the Soil",
+    "button2": "Plant the Seeds",
+    "button3": "Watering Tips",
+    "button4": "Plant Foodn(Fertilizers)",
+    "button5": "Pest Control"
+  },
+
+  "teaching": {
+    "title": "What would you like to learn?",
+    "sub_title": "Learning about sustainability helps save our planet for the youth. Press any button and learn a new skill",
+    "card1": "Sustainable Fertilizers",
+    "card2": "Sustainable water usage",
+    "card3": "Seed sowing",
+    "card4": "Soil preperation",
+    "card5": "Sustainable pesticides",
+    "card6": "Excess crop usage"
+  }
+
+
+}

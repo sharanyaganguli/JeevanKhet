@@ -25,6 +25,8 @@ class _SoilAdvisorState extends State<Soiladvisor> {
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Column(
                     children: [
+                      Text("Here's what best suited for your farm:",
+                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),)
                     ]
                 )
             )

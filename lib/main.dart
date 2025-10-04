@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:my_app/Log.dart';
 import 'package:my_app/bottom%20nav.dart';
 import 'package:my_app/home.dart';
@@ -16,7 +17,10 @@ import 'package:my_app/register.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  var delegate = await LocalizationDelegate.create(
+      fallbackLocale: 'en_US',
+      supportedLocales: ['en_US', 'hi']);
+  runApp(LocalizedApp(delegate, MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -26,7 +30,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'JeevanKhet',
+          debugShowCheckedModeBanner: false,
           home: SplashScreen(),
     );
   }
@@ -46,25 +51,27 @@ class SplashScreenState extends State<SplashScreen>{
   void initState() {
     // TODO: implement initState
     super.initState();
+    // changeLocale(context, "hi");
     Timer(
-      Duration(seconds: 2), () async {
-        if (user == null) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => Login()));
-        }
-        else {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => BottomNav()));
-        }
+      Duration(seconds: 5), () async {
+      if (user == null) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Login()));
       }
+      else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => BottomNav()));
+      }
+    }
     );
+
   }
 
   @override
   Widget build(BuildContext context) {
    return Scaffold(
      body: Center(
-       child: Text("JeevanKhet")
+       child: Text(translate('app_title'))
      ),
    );
   }

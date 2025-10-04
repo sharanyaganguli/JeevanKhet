@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:my_app/products.dart';
 import 'package:my_app/SoilAdvisor.dart';
 
 class MainAdvice extends StatefulWidget {
@@ -26,6 +27,7 @@ class _MainAdviceState extends State<MainAdvice> {
     });
   }
 
+  /// Reusable button builder
   Widget _buildAdviceButton(
       String title, String query, IconData icon) {
     return Padding(
@@ -76,7 +78,7 @@ class _MainAdviceState extends State<MainAdvice> {
           children: [
             SizedBox(height: 20,),
             Text(
-              '👩‍🌾 What help do you need today?',
+              "advice.title",
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -86,7 +88,7 @@ class _MainAdviceState extends State<MainAdvice> {
             ),
             SizedBox(height: 8),
             Text(
-              'Tap a button and I’ll guide you step by step 🚜',
+              'advice.sub_title',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w400,
@@ -98,35 +100,35 @@ class _MainAdviceState extends State<MainAdvice> {
 
             // ✅ Buttons with navigation
             _buildAdviceButton(
-              "Ready the Soil",
+              "advice.button1",
               "Give me simple farmer-friendly soil preparation steps for rice in silty soil in Mumbai.",
               Icons.landscape,
             ),
             SizedBox(height: 20,),
 
             _buildAdviceButton(
-              "Plant the Seeds",
+              "advice.button2",
               "Explain in simple farmer-friendly language how to sow rice seeds in silty soil in Mumbai.",
               Icons.grass,
             ),
             SizedBox(height: 20,),
 
             _buildAdviceButton(
-              "Watering Tips",
+              "advice.button3",
               "Explain in simple farmer-friendly language how to irrigate rice crops sustainably in silty soil in Mumbai.",
               Icons.water_drop,
             ),
             SizedBox(height: 20,),
 
             _buildAdviceButton(
-              "Plant Food (Fertilizers)",
+              "advice.button4",
               "Explain in simple farmer-friendly language which fertilizers to use for rice in silty soil in Mumbai.",
               Icons.eco,
             ),
             SizedBox(height: 20,),
 
             _buildAdviceButton(
-              "Keep Pests Away",
+              "advice.button5",
               "Explain in simple farmer-friendly language how to control pests in rice crops in silty soil in Mumbai.",
               Icons.bug_report,
             ),
