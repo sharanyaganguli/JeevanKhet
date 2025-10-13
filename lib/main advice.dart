@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:my_app/products.dart';
-import 'package:my_app/SoilAdvisor.dart';
+import 'package:my_app/AdvicePage.dart';
 
 class MainAdvice extends StatefulWidget {
   @override
@@ -44,10 +44,9 @@ class _MainAdviceState extends State<MainAdvice> {
           elevation: 5,
         ),
         onPressed: (){
-          getResponse(query);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Soiladvisor()),
+            MaterialPageRoute(builder: (context) => Soiladvisor(query: query, title: title)),
           );
         },
         icon: Icon(icon, size: 20, color: Colors.white),
@@ -62,7 +61,7 @@ class _MainAdviceState extends State<MainAdvice> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100], // soft background for contrast
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text(
           '🌱 JeevanKhet',

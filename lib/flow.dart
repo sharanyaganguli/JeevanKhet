@@ -1,14 +1,10 @@
 List<Map<String, dynamic>> game_content = <Map<String, dynamic>>[
-  {
-    "question" : "Which Plant Do You Want?",
-    "options": ["green tree", "cherry blossom", "autumn tree", "palm tree"],
-    "answer": "hooray!",
-  },
-  {
+    {
     "question": "Your plant seems thirsty, what will you do?",
     "options": ["Drip irrigation", "Flood irrigation"],
-    "answer": "Drip irrigation helps water the plant without wasting any excess water, but flood irrigation might over water the plants!"
-  },
+    "answer": "Drip irrigation helps water the plant without wasting any excess water, but flood irrigation might over water the plants!",
+    "correct_answer": "Drip irrigation",
+    },
   {
     "question": "The pests are taking over and killing your crops! How will you fix this?",
     "options": ["Use natural predators (ladybugs)", "Spray chemical pesticide", "Crop rotation"],
