@@ -2,13 +2,16 @@ List<Map<String, dynamic>> game_content = <Map<String, dynamic>>[
     {
     "question": "Your plant seems thirsty, what will you do?",
     "options": ["Drip irrigation", "Flood irrigation"],
+    "wrong": "fsd dfyjds fdsj dsfds ydsfyjds dsfdsyvds",
     "answer": "Drip irrigation helps water the plant without wasting any excess water, but flood irrigation might over water the plants!",
     "correct_answer": "Drip irrigation",
     },
   {
     "question": "The pests are taking over and killing your crops! How will you fix this?",
     "options": ["Use natural predators (ladybugs)", "Spray chemical pesticide", "Crop rotation"],
-    "answer": "Natural predators and crop rotation are eco-friendly methods. Chemical pesticides may harm the soil and environment."
+    "wrong": "dsjh dsvd vdsyuvds fdsyu dcdsyu dsvcdsyds",
+    "answer": "Natural predators and crop rotation are eco-friendly methods. Chemical pesticides may harm the soil and environment.",
+    "correct_answer": "Use natural predators (ladybugs) | Crop rotation",
   },
   {
     "question": "Your soil looks weak and unhealthy. What will you add?",

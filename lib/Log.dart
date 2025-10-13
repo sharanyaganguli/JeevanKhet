@@ -57,7 +57,9 @@ class _LogState extends State<Log> {
       
       // Check if answer is correct
       String correctAnswer = game_content[currentQuestionIndex]["correct_answer"];
-      isCorrectAnswer = answer == correctAnswer;
+      for(String i in correctAnswer.split(" | ")) {
+        isCorrectAnswer = answer == i;
+      }
       
       if (!isCorrectAnswer) {
         lives--;
@@ -792,40 +794,9 @@ class _LogState extends State<Log> {
           appbar_first_section(),
           appbar_second_section(),
 
-          Positioned(
-            top: 100,
-            left: 20,
-            right: 20,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              // decoration: BoxDecoration(
-              //   color: Colors.white,
-              //   borderRadius: BorderRadius.circular(12),
-              //   border: Border.all(color: Colors.black, width: 3),
-              //   boxShadow: [
-              //     BoxShadow(
-              //       color: Colors.black.withOpacity(0.3),
-              //       blurRadius: 10,
-              //       offset: Offset(5, 5),
-              //     ),
-              //   ],
-              // ),
-              child: Text(
-                question["question"].toUpperCase(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontFamily: 'NTBrickSans',
-                ),
-              ),
-            ),
-          ),
-
           // Answer buttons
           Positioned(
-            top: 250,
+            top: 150,
             left: 40,
             right: 40,
             child: Column(
@@ -875,44 +846,75 @@ class _LogState extends State<Log> {
                 ]
             ),
           ),
-          // // Continue button
-          // Positioned(
-          //   bottom: 50,
-          //   left: 40,
-          //   right: 40,
-          //   child: GestureDetector(
-          //     onTap: _nextQuestion,
-          //     child: Container(
-          //       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-          //       decoration: BoxDecoration(
-          //         color: Color(0xFFB8B8B8),
-          //         border: Border.all(color: Colors.black, width: 3),
-          //         gradient: const LinearGradient(
-          //           colors: [Color(0xFFE4E4E4), Colors.grey],
-          //           begin: Alignment.topLeft,
-          //           end: Alignment.bottomRight,
-          //         ),
-          //       ),
-          //       child: Container(
-          //         margin: EdgeInsets.all(4),
-          //         padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-          //         decoration: BoxDecoration(
-          //           color: Colors.white,
-          //         ),
-          //         child: Text(
-          //           currentQuestionIndex < game_content.length - 1 ? 'NEXT QUESTION' : 'FINISH GAME',
-          //           textAlign: TextAlign.center,
-          //           style: TextStyle(
-          //             fontSize: 18,
-          //             fontWeight: FontWeight.bold,
-          //             color: Colors.black,
-          //             fontFamily: 'monospace',
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
+
+          Positioned(
+            top: 100,
+            left: 20,
+            right: 20,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              // decoration: BoxDecoration(
+              //   color: Colors.white,
+              //   borderRadius: BorderRadius.circular(12),
+              //   border: Border.all(color: Colors.black, width: 3),
+              //   boxShadow: [
+              //     BoxShadow(
+              //       color: Colors.black.withOpacity(0.3),
+              //       blurRadius: 10,
+              //       offset: Offset(5, 5),
+              //     ),
+              //   ],
+              // ),
+              child: Text(
+                question["wrong"].toUpperCase(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontFamily: 'monospace',
+                ),
+              ),
+            ),
+          ),
+          // Continue button
+          Positioned(
+            top: 1,
+            left: 40,
+            right: 40,
+            child: GestureDetector(
+              onTap: _nextQuestion,
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                decoration: BoxDecoration(
+                  color: Color(0xFFB8B8B8),
+                  border: Border.all(color: Colors.black, width: 3),
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFE4E4E4), Colors.grey],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: Container(
+                  margin: EdgeInsets.all(4),
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                  ),
+                  child: Text(
+                    'Try Again'.toUpperCase(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontFamily: 'monospace',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
