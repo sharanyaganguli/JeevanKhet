@@ -36,7 +36,8 @@ class _TeachingDetailsState extends State<TeachingDetails> {
         child: Container(
           child: Column(
             children: [
-              Text(content["title"])
+              Text(content["title"]),
+              Image.asset(content["image"]),
               ]
           )
         ),

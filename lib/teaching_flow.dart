@@ -7,6 +7,7 @@ Map<String, dynamic> teaching_content =
         "\nThey support soil microbes, increase organic matter, and maintain nutrient balance. "
         "\nExamples include compost, vermicompost, green manure, cow dung slurry, and bio-fertilizers like Rhizobium or Azospirillum. "
         "\nThese fertilizers release nutrients slowly and keep the soil productive year after year.",
+    "image": "assets/dtfhj.png",
 
     "sub-title2": "Harm of chemical fertilizers",
     "para2": "Excessive use of chemical fertilizers such as urea or DAP increases soil acidity and reduces organic carbon. "
