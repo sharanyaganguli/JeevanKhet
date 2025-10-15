@@ -5,6 +5,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:my_app/products.dart';
 import 'package:my_app/main advice.dart';
 import 'package:my_app/values.dart';
+import 'package:my_app/teaching_details.dart';
 
 class Teaching extends StatefulWidget {
   @override
@@ -121,31 +122,36 @@ class _TeachingState extends State<Teaching> {
   }
 
   Widget TeachingCard(name, image, colour){
-    return Container(
-      /* padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),*/
-      width: MediaQuery.of(context).size.width/2-40,
-      height: 200,
-      decoration: BoxDecoration(
-        border: Border.all(),
-        borderRadius: BorderRadius.circular(20),
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => TeachingDetails(name)));
+      },
+      child: Container(
+        /* padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),*/
+        width: MediaQuery.of(context).size.width/2-40,
+        height: 200,
+        decoration: BoxDecoration(
+          border: Border.all(),
+          borderRadius: BorderRadius.circular(20),
 
-      ),
-      child:
-      Column(
-        children: [
-          Container(
-              height: 150,
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              decoration: BoxDecoration(
-                  color: colour,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))
-              ),
-              child: Image.asset("assets/$image", width: 150, height: 150)
-          ),
+        ),
+        child:
+        Column(
+          children: [
+            Container(
+                height: 150,
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                decoration: BoxDecoration(
+                    color: colour,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))
+                ),
+                child: Image.asset("assets/$image", width: 150, height: 150)
+            ),
 
-          SizedBox(height: 10),
-          Text(name, style: TextStyle(fontWeight: FontWeight.w700),),
-        ],
+            SizedBox(height: 10),
+            Text(name, style: TextStyle(fontWeight: FontWeight.w700),),
+          ],
+        ),
       ),
     );
   }
