@@ -47,7 +47,10 @@ class _HomeState extends State<Home>{
         backgroundColor:  Color(0xFF969A2A),
         // centerTitle: true,
         actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.person))
+          IconButton(onPressed: (){
+            Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Account()));
+            }, icon: Icon(Icons.person))
         ],
       ),
       body: SingleChildScrollView(

@@ -531,8 +531,7 @@ class _LogState extends State<Log> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/${_getPlantDirectoryName(selectedPlant)}/question.gif'),
-          fit: BoxFit.cover,
+          image: AssetImage('assets/${_getPlantDirectoryName(selectedPlant)}/question${currentQuestionIndex}.gif'),          fit: BoxFit.cover,
         ),
       ),
       child: Stack(
