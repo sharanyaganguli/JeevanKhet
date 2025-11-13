@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:my_app/products.dart';
 import 'package:my_app/AdvicePage.dart';
 
@@ -76,8 +77,7 @@ class _MainAdviceState extends State<MainAdvice> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 20,),
-            Text(
-              "advice.title",
+            Text(translate("advice.title"),
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -86,8 +86,7 @@ class _MainAdviceState extends State<MainAdvice> {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 8),
-            Text(
-              'advice.sub_title',
+            Text(translate('advice.sub_title'),
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w400,
@@ -106,28 +105,28 @@ class _MainAdviceState extends State<MainAdvice> {
             SizedBox(height: 20,),
 
             _buildAdviceButton(
-              "advice.button2",
+              translate('advice.button2'),
               "Explain in simple farmer-friendly language how to sow rice seeds in silty soil in Mumbai.",
               Icons.grass,
             ),
             SizedBox(height: 20,),
 
             _buildAdviceButton(
-              "advice.button3",
+              translate("advice.button3"),
               "Explain in simple farmer-friendly language how to irrigate rice crops sustainably in silty soil in Mumbai.",
               Icons.water_drop,
             ),
             SizedBox(height: 20,),
 
             _buildAdviceButton(
-              "advice.button4",
+              translate("advice.button4"),
               "Explain in simple farmer-friendly language which fertilizers to use for rice in silty soil in Mumbai.",
               Icons.eco,
             ),
             SizedBox(height: 20,),
 
             _buildAdviceButton(
-              "advice.button5",
+              translate("advice.button5"),
               "Explain in simple farmer-friendly language how to control pests in rice crops in silty soil in Mumbai.",
               Icons.bug_report,
             ),

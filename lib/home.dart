@@ -49,7 +49,7 @@ class _HomeState extends State<Home>{
         actions: [
           IconButton(onPressed: (){
             Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Account()));
+              context, MaterialPageRoute(builder: (context) => Home()));
             }, icon: Icon(Icons.person))
         ],
       ),
