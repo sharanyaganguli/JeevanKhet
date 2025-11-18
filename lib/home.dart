@@ -4,8 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:my_app/account.dart';
 import 'package:my_app/products.dart';
 import 'package:my_app/values.dart';
+import 'package:my_app/account_page.dart';
 
 class Home extends StatefulWidget{
   @override
@@ -49,7 +51,7 @@ class _HomeState extends State<Home>{
         actions: [
           IconButton(onPressed: (){
             Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Home()));
+              context, MaterialPageRoute(builder: (context) => const AccountPage()));
             }, icon: Icon(Icons.person))
         ],
       ),

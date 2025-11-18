@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:my_app/teaching_flow.dart';
 import 'package:my_app/values.dart'; // Assuming this holds the teaching_content map
+import 'package:my_app/home.dart';
 
 class TeachingDetails extends StatefulWidget {
   final String title;
