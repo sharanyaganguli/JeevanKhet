@@ -119,8 +119,8 @@ class _OtpVerifyState extends State<OtpVerify> {
       ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Color(0xFF969A2A), width: 2),
+        // borderRadius: BorderRadius.circular(12),
+        // border: Border.all(color: Color(0xFF969A2A), width: 2),
       ),
     );
 
