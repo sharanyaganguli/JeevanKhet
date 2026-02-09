@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:my_app/products.dart';
 import 'package:my_app/main advice.dart';
 import 'package:my_app/values.dart';
@@ -49,7 +49,7 @@ class _TeachingState extends State<Teaching> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Teaching',
+          '🌱 ${'screen_titles.teaching'.tr()}',
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         backgroundColor: Color(0xFF969A2A),
@@ -62,7 +62,7 @@ class _TeachingState extends State<Teaching> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Heading
-            Text( translate('teaching.title'),
+            Text('teaching.title'.tr(),
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -74,7 +74,7 @@ class _TeachingState extends State<Teaching> {
 
             // Subtitle
             Text(
-              translate('teaching.sub_title'),
+              'teaching.sub_title'.tr(),
               style: TextStyle(
                 fontSize: 15,
                 color: Colors.black54,
@@ -87,9 +87,9 @@ class _TeachingState extends State<Teaching> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TeachingCard(translate("teaching.card1"), "fertilizer.png", lightThemeColor),
+                TeachingCard("teaching.card1".tr(), "fertilizer.png", lightThemeColor, "card1"),
                 SizedBox(width: 20),
-                TeachingCard(translate("teaching.card2"), "plant game.png", lightThemeColor),
+                TeachingCard("teaching.card2".tr(), "plant game.png", lightThemeColor, "card2"),
               ],
             ),
             SizedBox(height: 20),
@@ -97,9 +97,9 @@ class _TeachingState extends State<Teaching> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TeachingCard(translate("teaching.card3"), "seeds.jpg", lightThemeColor),
+                TeachingCard("teaching.card3".tr(), "seeds.jpg", lightThemeColor, "card3"),
                 SizedBox(width: 20),
-                TeachingCard(translate("teaching.card4"), "soil.png", lightThemeColor),
+                TeachingCard("teaching.card4".tr(), "soil.png", lightThemeColor, "card4"),
               ],
             ),
             SizedBox(height: 20),
@@ -107,9 +107,9 @@ class _TeachingState extends State<Teaching> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TeachingCard(translate("teaching.card5"), "pesticide.png", lightThemeColor),
+                TeachingCard("teaching.card5".tr(), "pesticide.png", lightThemeColor, "card5"),
                 SizedBox(width: 20),
-                TeachingCard(translate("teaching.card6"), "crops.png", lightThemeColor),
+                TeachingCard("teaching.card6".tr(), "crops.png", lightThemeColor, "card6"),
 
               ],
             )
@@ -121,35 +121,64 @@ class _TeachingState extends State<Teaching> {
     );
   }
 
-  Widget TeachingCard(name, image, colour){
+  Widget TeachingCard(name, image, colour, cardKey){
     return GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => TeachingDetails(name)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => TeachingDetails(cardKey)));
       },
       child: Container(
-        /* padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),*/
         width: MediaQuery.of(context).size.width/2-40,
         height: 200,
         decoration: BoxDecoration(
-          border: Border.all(),
+          color: Colors.white,
+          border: Border.all(color: Colors.grey.shade300, width: 1),
           borderRadius: BorderRadius.circular(20),
-
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: Offset(0, 3),
+            ),
+          ],
         ),
-        child:
-        Column(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-                height: 150,
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                decoration: BoxDecoration(
-                    color: colour,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))
+              height: 130,
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: colour,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
-                child: Image.asset("assets/$image", width: 150, height: 150)
+              ),
+              child: Image.asset(
+                "assets/$image",
+                fit: BoxFit.contain,
+                width: double.infinity,
+                height: double.infinity,
+              ),
             ),
-
-            SizedBox(height: 10),
-            Text(name, style: TextStyle(fontWeight: FontWeight.w700),),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: Center(
+                  child: Text(
+                    name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

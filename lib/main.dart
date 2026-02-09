@@ -4,34 +4,46 @@ import 'package:firebase_core/firebase_core.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
-import 'package:my_app/Log.dart';
-import 'package:my_app/bottom%20nav.dart';
-import 'package:my_app/home.dart';
-import 'package:my_app/login.dart';
-import 'package:my_app/main%20advice.dart';
-import 'package:my_app/products.dart';
-import 'package:my_app/questions.dart';
-import 'package:my_app/register.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'bottom%20nav.dart';
+import 'firebase_options.dart';
+import 'login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  var delegate = await LocalizationDelegate.create(
-      fallbackLocale: 'en_US',
-      supportedLocales: ['en_US', 'hi']);
-  runApp(LocalizedApp(delegate, MyApp()));
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await EasyLocalization.ensureInitialized();
+
+  runApp(
+    EasyLocalization(
+      supportedLocales: [Locale('en'), Locale('hi')],
+      path: 'assets/i18n',
+      fallbackLocale: Locale('en'),
+      saveLocale: true,
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      key: ValueKey(context.locale.toString()),
       title: 'JeevanKhet',
           debugShowCheckedModeBanner: false,
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
           home: SplashScreen(),
     );
   }
@@ -49,11 +61,10 @@ class SplashScreenState extends State<SplashScreen>{
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // changeLocale(context, "hi");
+    // FirebaseAuth.instance.signOut();
     Timer(
-      Duration(seconds: 5), () async {
+      Duration(seconds: 3), () async {
       if (user == null) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Login()));
@@ -70,8 +81,9 @@ class SplashScreenState extends State<SplashScreen>{
   @override
   Widget build(BuildContext context) {
    return Scaffold(
+     backgroundColor: Colors.white,
      body: Center(
-       child: Text(translate('app_title'))
+       child: Image.asset("assets/JeevanKhetLOGO.png",)
      ),
    );
   }

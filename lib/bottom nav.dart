@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,7 +7,7 @@ import 'package:my_app/subsidy.dart';
 import 'package:my_app/values.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
-import 'Log.dart';
+import 'Quiz.dart';
 import 'home.dart';
 import 'main advice.dart';
 
@@ -48,27 +49,27 @@ class _BottomNavState extends State<BottomNav> {
             icon: Icon(FontAwesomeIcons.house),
             selectedColor: themeColor,
             unSelectedColor: Colors.grey,
-            title: Text('Home'),
+            title: Text('bottom_nav_home'.tr()),
           ),
           BottomBarItem(
             icon: Icon(FontAwesomeIcons.listCheck),
             selectedColor: themeColor,
-            title: Text('DailyLog'),
+            title: Text('bottom_nav_quiz'.tr()),
           ),
           BottomBarItem(
             icon: Icon(FontAwesomeIcons.handHoldingHeart),
             selectedColor: themeColor,
-            title: Text('Advice'),
+            title: Text('bottom_nav_advice'.tr()),
           ),
           BottomBarItem(
             icon: Icon(FontAwesomeIcons.book),
             selectedColor: themeColor,
-            title: Text('Teaching'),
+            title: Text('bottom_nav_teaching'.tr()),
           ),
           BottomBarItem(
             icon: Icon(FontAwesomeIcons.coins),
             selectedColor: themeColor,
-            title: Text('Subsidy'),
+            title: Text('bottom_nav_subsidy'.tr()),
           ),
         ],
         hasNotch: true,

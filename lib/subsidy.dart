@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class Subsidy extends StatelessWidget {
   const Subsidy({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class Subsidy extends StatelessWidget {
       backgroundColor: Colors.grey[50], // A light background for contrast
       appBar: AppBar(
         title: Text(
-          'Government Schemes & Subsidies',
+          '🌱 ${'subsidy.title'.tr()}',
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         backgroundColor: lightThemeColor,
@@ -44,7 +45,7 @@ class Subsidy extends StatelessWidget {
           children: [
             // --- Header Text ---
             Text(
-              "Access valuable government resources to support your farming needs. The links below provide access to schemes, market prices, and financial aid.",
+              'subsidy.sub_title'.tr(),
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[700],
@@ -56,8 +57,8 @@ class Subsidy extends StatelessWidget {
             _buildSubsidyCard(
               context: context,
               icon: Icons.account_balance_wallet_outlined,
-              title: "Agri Infra Fund (AIF)",
-              subtitle: "Apply for financial support for post-harvest infrastructure.",
+              title: 'subsidy.title1'.tr(),
+              subtitle: 'subsidy.desc1'.tr(),
               url: "https://agriinfra.dac.gov.in/Home/BeneficiaryRegistration",
               themeColor: themeColor,
             ),
@@ -65,8 +66,8 @@ class Subsidy extends StatelessWidget {
             _buildSubsidyCard(
               context: context,
               icon: Icons.store_mall_directory_outlined,
-              title: "e-NAM Portal",
-              subtitle: "Access a pan-India electronic trading portal for your produce.",
+              title: 'subsidy.title2'.tr(),
+              subtitle: 'subsidy.desc2'.tr(),
               url: "https://www.enam.gov.in/",
               themeColor: themeColor,
             ),
@@ -74,8 +75,8 @@ class Subsidy extends StatelessWidget {
             _buildSubsidyCard(
               context: context,
               icon: Icons.support_agent_outlined,
-              title: "Kisan e-Mitra",
-              subtitle: "Get information on services like PM-Kisan and crop insurance.",
+              title: 'subsidy.title3'.tr(),
+              subtitle: 'subsidy.desc3'.tr(),
               url: "https://kisanemitra.gov.in/Home/Index",
               themeColor: themeColor,
             ),

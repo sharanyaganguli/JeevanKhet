@@ -1,5 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:my_app/flow.dart';
 
 class Log extends StatefulWidget {
@@ -10,12 +11,14 @@ class Log extends StatefulWidget {
 }
 
 class _LogState extends State<Log> {
-  int currentScreen = 0; // 0: intro, 1: plant selection, 2: celebration, 3+: questions, 4: correct answer, 5: wrong answer
+  int currentScreen = 0;
   String selectedPlant = '';
   int currentQuestionIndex = 0;
   int lives = 3;
   String? selectedAnswer;
   bool isCorrectAnswer = false;
+  bool showContinueButton = false;
+  Timer? _buttonTimer;
 
   final Color themeColor = Color(0xFF566017);
   final Color lightThemeColor = Color(0xFF969A2A);
@@ -34,6 +37,7 @@ class _LogState extends State<Log> {
   }
 
   void _restartGame() {
+    _buttonTimer?.cancel();
     setState(() {
       currentScreen = 0;
       selectedPlant = '';
@@ -41,6 +45,7 @@ class _LogState extends State<Log> {
       lives = 3;
       selectedAnswer = null;
       isCorrectAnswer = false;
+      showContinueButton = false;
     });
   }
 
@@ -54,24 +59,59 @@ class _LogState extends State<Log> {
   void _selectAnswer(String answer) {
     setState(() {
       selectedAnswer = answer;
-      
-      // Check if answer is correct
-      String correctAnswer = game_content[currentQuestionIndex]["correct_answer"];
-      for(String i in correctAnswer.split(" | ")) {
-        isCorrectAnswer = answer == i;
+
+      String? correctAnswer = game_content[0]["correct_answer"];
+      if (correctAnswer != null) {
+        List<String> correctAnswers = correctAnswer.split(" | ").map((e) => e.trim()).toList();
+        isCorrectAnswer = correctAnswers.contains(answer);
+      } else {
+        isCorrectAnswer = false;
       }
       
       if (!isCorrectAnswer) {
         lives--;
-        currentScreen = 5; // Wrong answer screen
+        if (lives <= 0) {
+          _restartGame();
+        } else {
+          setState(() {
+            currentScreen = 5;
+            showContinueButton = false;
+          });
+          _buttonTimer?.cancel();
+          _buttonTimer = Timer(Duration(seconds: 2), () {
+            if (mounted) {
+              setState(() {
+                showContinueButton = true;
+              });
+            }
+          });
+        }
       } else {
-        currentScreen = 4; // Correct answer screen
+        // Show correct answer screen with answer's GIF background
+        setState(() {
+          currentScreen = 4; // Correct answer screen
+          showContinueButton = false;
+        });
+        // Start timer to show button after 5 seconds
+        _buttonTimer?.cancel();
+        _buttonTimer = Timer(Duration(seconds: 2), () {
+          if (mounted) {
+            setState(() {
+              showContinueButton = true;
+            });
+          }
+        });
       }
     });
   }
 
   void _nextQuestion() {
-    if (currentQuestionIndex < game_content.length - 1) {
+    // Only show first question, so after correct answer, go to completion
+    if (currentScreen == 4 && currentQuestionIndex == 0) {
+      setState(() {
+        currentScreen = 6; // Completion screen
+      });
+    } else if (currentQuestionIndex < game_content.length - 1) {
       setState(() {
         currentQuestionIndex++;
         selectedAnswer = null;
@@ -522,16 +562,19 @@ class _LogState extends State<Log> {
   }
 
   Widget _buildQuestionScreen() {
-    if (currentQuestionIndex >= game_content.length) {
-      return _buildGameCompleteScreen();
+    // Only show first question
+    if (currentQuestionIndex >= 1) {
+      return _buildCompletionScreen();
     }
 
-    var question = game_content[currentQuestionIndex];
+    var question = game_content[0]; // Always show first question
+    String questionGifPath = 'assets/${_getPlantDirectoryName(selectedPlant)}/question.gif';
     
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/${_getPlantDirectoryName(selectedPlant)}/question${currentQuestionIndex}.gif'),          fit: BoxFit.cover,
+          image: AssetImage(questionGifPath),
+          fit: BoxFit.cover,
         ),
       ),
       child: Stack(
@@ -640,11 +683,14 @@ class _LogState extends State<Log> {
   }
 
   Widget _buildCorrectAnswerScreen() {
-    var question = game_content[currentQuestionIndex];
+    var question = game_content[0]; // Always use first question
+    // Use the selected answer's GIF file name as background
+    String answerGifPath = 'assets/${_getPlantDirectoryName(selectedPlant)}/${selectedAnswer ?? "final"}.gif';
+    
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/${_getPlantDirectoryName(selectedPlant)}/${selectedAnswer}.gif'),
+          image: AssetImage(answerGifPath),
           fit: BoxFit.cover,
         ),
       ),
@@ -653,222 +699,18 @@ class _LogState extends State<Log> {
           appbar_first_section(),
           appbar_second_section(),
 
+          // Show the answer text from the list (before the container)
           Positioned(
             top: 100,
             left: 20,
             right: 20,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              // decoration: BoxDecoration(
-              //   color: Colors.white,
-              //   borderRadius: BorderRadius.circular(12),
-              //   border: Border.all(color: Colors.black, width: 3),
-              //   boxShadow: [
-              //     BoxShadow(
-              //       color: Colors.black.withOpacity(0.3),
-              //       blurRadius: 10,
-              //       offset: Offset(5, 5),
-              //     ),
-              //   ],
-              // ),
               child: Text(
-                question["question"].toUpperCase(),
+                question["answer"] ?? "",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontFamily: 'NTBrickSans',
-                ),
-              ),
-            ),
-          ),
-
-          // Answer buttons
-          Positioned(
-            top: 250,
-            left: 40,
-            right: 40,
-            child: Column(
-              children: [
-              Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(bottom: 35),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 3),
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFE4E4E4), Color(0xFF518751)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      margin: EdgeInsets.all(3),
-                      // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                      decoration: BoxDecoration(
-                        color: Color(0xFF9ADC9A),
-                        // borderRadius: BorderRadius.circular(12),
-                        // border: Border.all(color: Colors.black, width: 3),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 5,
-                            offset: Offset(3, 3),
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        selectedAnswer!.toUpperCase(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                          fontFamily: 'monospace',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ]
-            ),
-          ),
-          // Continue button
-          // Positioned(
-          //   bottom: 50,
-          //   left: 40,
-          //   right: 40,
-          //   child: GestureDetector(
-          //     onTap: _nextQuestion,
-          //     child: Container(
-          //       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-          //       decoration: BoxDecoration(
-          //         color: Color(0xFFB8B8B8),
-          //         border: Border.all(color: Colors.black, width: 3),
-          //         gradient: const LinearGradient(
-          //           colors: [Color(0xFFE4E4E4), Colors.grey],
-          //           begin: Alignment.topLeft,
-          //           end: Alignment.bottomRight,
-          //         ),
-          //       ),
-          //       child: Container(
-          //         margin: EdgeInsets.all(4),
-          //         padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-          //         decoration: BoxDecoration(
-          //           color: Colors.white,
-          //         ),
-          //         child: Text(
-          //           currentQuestionIndex < game_content.length - 1 ? 'NEXT QUESTION' : 'FINISH GAME',
-          //           textAlign: TextAlign.center,
-          //           style: TextStyle(
-          //             fontSize: 18,
-          //             fontWeight: FontWeight.bold,
-          //             color: Colors.black,
-          //             fontFamily: 'monospace',
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWrongAnswerScreen() {
-    var question = game_content[currentQuestionIndex];
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/${_getPlantDirectoryName(selectedPlant)}/${selectedAnswer}.gif'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Stack(
-        children: [
-          appbar_first_section(),
-          appbar_second_section(),
-
-          // Answer buttons
-          Positioned(
-            top: 150,
-            left: 40,
-            right: 40,
-            child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 35),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 3),
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFE4E4E4), Color(0xFF518751)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        margin: EdgeInsets.all(3),
-                        // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: Color(0xFF9ADC9A),
-                          // borderRadius: BorderRadius.circular(12),
-                          // border: Border.all(color: Colors.black, width: 3),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              blurRadius: 5,
-                              offset: Offset(3, 3),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          selectedAnswer!.toUpperCase(),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
-                            fontFamily: 'monospace',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ]
-            ),
-          ),
-
-          Positioned(
-            top: 100,
-            left: 20,
-            right: 20,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              // decoration: BoxDecoration(
-              //   color: Colors.white,
-              //   borderRadius: BorderRadius.circular(12),
-              //   border: Border.all(color: Colors.black, width: 3),
-              //   boxShadow: [
-              //     BoxShadow(
-              //       color: Colors.black.withOpacity(0.3),
-              //       blurRadius: 10,
-              //       offset: Offset(5, 5),
-              //     ),
-              //   ],
-              // ),
-              child: Text(
-                question["wrong"].toUpperCase(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 17,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                   fontFamily: 'monospace',
@@ -876,40 +718,265 @@ class _LogState extends State<Log> {
               ),
             ),
           ),
-          // Continue button
+
+          // Show the selected answer container (drip irrigation container)
           Positioned(
-            top: 1,
+            top: 280,
             left: 40,
             right: 40,
-            child: GestureDetector(
-              onTap: _nextQuestion,
+            child: Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(bottom: 35),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 3),
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFE4E4E4), Color(0xFF518751)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                margin: EdgeInsets.all(3),
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                 decoration: BoxDecoration(
-                  color: Color(0xFFB8B8B8),
-                  border: Border.all(color: Colors.black, width: 3),
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFE4E4E4), Colors.grey],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+                  color: Color(0xFF9ADC9A),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 5,
+                      offset: Offset(3, 3),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  selectedAnswer!.toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                    fontFamily: 'monospace',
                   ),
                 ),
+              ),
+            ),
+          ),
+
+          // Continue button - show after 5 seconds, positioned after the container
+          if (showContinueButton)
+            Positioned(
+              top: 380,
+              left: 40,
+              right: 40,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    currentScreen = 6; // Go to completion screen with last.png
+                  });
+                },
                 child: Container(
-                  margin: EdgeInsets.all(4),
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                  ),
-                  child: Text(
-                    'Try Again'.toUpperCase(),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontFamily: 'monospace',
+                    color: Color(0xFFB8B8B8),
+                    border: Border.all(color: Colors.black, width: 3),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFE4E4E4), Colors.grey],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
                   ),
+                  child: Container(
+                    margin: EdgeInsets.all(4),
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: Text(
+                      'CONTINUE',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontFamily: 'monospace',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWrongAnswerScreen() {
+    var question = game_content[0]; // Always use first question
+    // Use the selected answer's GIF file name for wrong answers too
+    String answerGifPath = 'assets/${_getPlantDirectoryName(selectedPlant)}/${selectedAnswer ?? "final"}.gif';
+    
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(answerGifPath),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Stack(
+        children: [
+          appbar_first_section(),
+          appbar_second_section(),
+
+          // Show the wrong text from the list (before the container)
+          Positioned(
+            top: 100,
+            left: 20,
+            right: 20,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              child: Text(
+                question["wrong"] ?? "",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontFamily: 'monospace',
+                ),
+              ),
+            ),
+          ),
+
+          // Show the selected answer container
+          Positioned(
+            top: 280,
+            left: 40,
+            right: 40,
+            child: Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(bottom: 35),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 3),
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFE4E4E4), Color(0xFF518751)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Container(
+                margin: EdgeInsets.all(3),
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Color(0xFF9ADC9A),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 5,
+                      offset: Offset(3, 3),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  selectedAnswer!.toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                    fontFamily: 'monospace',
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // Try Again button - show after 5 seconds, positioned after the container
+          if (showContinueButton)
+            Positioned(
+              top: 380,
+              left: 40,
+              right: 40,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    currentScreen = 3; // Go back to question screen
+                    selectedAnswer = null;
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFFB8B8B8),
+                    border: Border.all(color: Colors.black, width: 3),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFE4E4E4), Colors.grey],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.all(4),
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: Text(
+                      'TRY AGAIN',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontFamily: 'monospace',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCompletionScreen() {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/${_getPlantDirectoryName(selectedPlant)}/final.gif'),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Stack(
+        children: [
+          appbar_first_section(),
+          appbar_second_section(),
+          
+          // Message saying more challenges will come soon
+          Positioned(
+            top: 100,
+            left: 40,
+            right: 40,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.black, width: 2),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 10,
+                    offset: Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Text(
+                'More challenges coming soon!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontFamily: 'monospace',
                 ),
               ),
             ),
@@ -1020,6 +1087,7 @@ class _LogState extends State<Log> {
           if (currentScreen == 3) _buildQuestionScreen(),
           if (currentScreen == 4) _buildCorrectAnswerScreen(),
           if (currentScreen == 5) _buildWrongAnswerScreen(),
+          if (currentScreen == 6) _buildCompletionScreen(),
         ],
       ),
     );

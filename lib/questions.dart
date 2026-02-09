@@ -3,6 +3,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:my_app/bottom%20nav.dart';
 import 'package:my_app/home.dart';
 import 'package:my_app/products.dart';
@@ -18,9 +19,8 @@ class Questions_ extends StatefulWidget {
 }
 
 class _QuestionsState extends State<Questions_> {
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
 
-  // Crops list
   final List<String> crops = [
     "Wheat",
     "Millet",
@@ -32,7 +32,6 @@ class _QuestionsState extends State<Questions_> {
 
   Map<String, bool> selectedCrops = {};
 
-  // Question 3: Soil type (single choice)
   final List<String> soilTypes = [
     "Sandy soil",
     "Silty soil",
@@ -94,6 +93,74 @@ class _QuestionsState extends State<Questions_> {
     selectedIrrigation = {for (var item in irrigationMethods) item: false};
     selectedFertilizers = {for (var fert in fertilizers) fert: false};
     selectedEquipment = {for (var eq in equipment) eq: false};
+    // Load existing user data
+    _loadUserData();
+  }
+
+  void _loadUserData() async {
+    try {
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(widget.uid)
+          .get();
+      
+      if (doc.exists && mounted) {
+        Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+        if (data != null) {
+          setState(() {
+            // Load city
+            if (data['city'] != null) {
+              _cityController.text = data['city'].toString();
+            }
+            // Load other preferences if needed
+            if (data['soil_type'] != null) {
+              selectedSoil = data['soil_type'].toString();
+            }
+            if (data['irrigation_frequency'] != null) {
+              selectedFrequency = data['irrigation_frequency'].toString();
+            }
+            if (data['land_size'] != null) {
+              selectedLandSize = data['land_size'].toString();
+            }
+            // Load crops
+            if (data['crops'] != null && data['crops'] is List) {
+              List<dynamic> savedCrops = data['crops'];
+              for (var crop in savedCrops) {
+                if (selectedCrops.containsKey(crop)) {
+                  selectedCrops[crop] = true;
+                }
+              }
+            }
+            // Load fertilizers
+            if (data['fertilizers'] != null && data['fertilizers'] is List) {
+              List<dynamic> savedFertilizers = data['fertilizers'];
+              for (var fert in savedFertilizers) {
+                if (selectedFertilizers.containsKey(fert)) {
+                  selectedFertilizers[fert] = true;
+                }
+              }
+            }
+            // Load equipment
+            if (data['equipments'] != null && data['equipments'] is List) {
+              List<dynamic> savedEquipment = data['equipments'];
+              for (var eq in savedEquipment) {
+                if (selectedEquipment.containsKey(eq)) {
+                  selectedEquipment[eq] = true;
+                }
+              }
+            }
+          });
+        }
+      }
+    } catch (e) {
+      print("Error loading user data: $e");
+    }
+  }
+
+  @override
+  void dispose() {
+    _cityController.dispose();
+    super.dispose();
   }
 
 
@@ -102,7 +169,7 @@ class _QuestionsState extends State<Questions_> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'JeevanKhet',
+          'questions_page.app_title'.tr(),
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         backgroundColor: Color(0xFF969A2A),
@@ -117,7 +184,7 @@ class _QuestionsState extends State<Questions_> {
             children: [
               SizedBox(height: 10),
               Text(
-                "Help us get to know your farm better! Share your techniques and we'll tailor the app just for you.",
+                'questions_page.page_intro'.tr(),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                 textAlign: TextAlign.center,
               ),
@@ -125,7 +192,7 @@ class _QuestionsState extends State<Questions_> {
 
               // Question 2: Crops
               Text(
-                "1. What crop do you grow?",
+                'questions_page.q1_title'.tr(),
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 8),
@@ -135,11 +202,12 @@ class _QuestionsState extends State<Questions_> {
                 spacing: 10,
                 runSpacing: 5,
                 children: crops.map((crop) {
+                  String cropKey = _getCropTranslationKey(crop);
                   return SizedBox(
                     width: 150, // adjust width so two checkboxes per row
                     child: CheckboxListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: Text(crop),
+                      title: Text(cropKey.isNotEmpty ? cropKey.tr() : crop),
                       controlAffinity: ListTileControlAffinity.leading,
                       value: selectedCrops[crop],
                       activeColor: Colors.green,
@@ -156,12 +224,13 @@ class _QuestionsState extends State<Questions_> {
               SizedBox(height: 20),
 
               // Q3: Soil type (single choice - radio buttons)
-              Text("2. What type of soil do you have?",
+              Text('questions_page.q2_title'.tr(),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
               Column(
                 children: soilTypes.map((soil) {
+                  String soilKey = _getSoilTranslationKey(soil);
                   return RadioListTile<String>(
-                    title: Text(soil),
+                    title: Text(soilKey.isNotEmpty ? soilKey.tr() : soil),
                     value: soil,
                     groupValue: selectedSoil,
                     activeColor: Colors.green,
@@ -177,12 +246,13 @@ class _QuestionsState extends State<Questions_> {
               SizedBox(height: 20),
 
               // Q4: Irrigation frequency
-              Text("3. Do you irrigate, and if so, how often?",
+              Text('questions_page.q3_title'.tr(),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
               Column(
                 children: irrigationFrequency.map((freq) {
+                  String freqKey = _getIrrigationFreqTranslationKey(freq);
                   return RadioListTile<String>(
-                    title: Text(freq),
+                    title: Text(freqKey.isNotEmpty ? freqKey.tr() : freq),
                     value: freq,
                     groupValue: selectedFrequency,
                     activeColor: Colors.green,
@@ -198,12 +268,13 @@ class _QuestionsState extends State<Questions_> {
               SizedBox(height: 20),
 
               // Q5: Irrigation methods (multiple choice)
-              Text("4. What irrigation methods are available to you?",
+              Text('questions_page.q4_title'.tr(),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
               Column(
                 children: irrigationMethods.map((method) {
+                  String methodKey = _getIrrigationMethodTranslationKey(method);
                   return CheckboxListTile(
-                    title: Text(method),
+                    title: Text(methodKey.isNotEmpty ? methodKey.tr() : method),
                     controlAffinity: ListTileControlAffinity.leading,
                     value: selectedIrrigation[method],
                     activeColor: Colors.green,
@@ -219,12 +290,13 @@ class _QuestionsState extends State<Questions_> {
               SizedBox(height: 20),
 
               // Q6: Land size
-              Text("5. How large is your land size? (in acres)",
+              Text('questions_page.q5_title'.tr(),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
               Column(
                 children: landSizes.map((size) {
+                  String sizeKey = _getLandSizeTranslationKey(size);
                   return RadioListTile<String>(
-                    title: Text(size),
+                    title: Text(sizeKey.isNotEmpty ? sizeKey.tr() : size),
                     value: size,
                     groupValue: selectedLandSize,
                     activeColor: Colors.green,
@@ -240,12 +312,13 @@ class _QuestionsState extends State<Questions_> {
               SizedBox(height: 20),
 
               // Q7: Fertilizers (multiple choice)
-              Text("6. Which fertilizer do you apply?",
+              Text('questions_page.q6_title'.tr(),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
               Column(
                 children: fertilizers.map((fert) {
+                  String fertKey = _getFertilizerTranslationKey(fert);
                   return CheckboxListTile(
-                    title: Text(fert),
+                    title: Text(fertKey.isNotEmpty ? fertKey.tr() : fert),
                     controlAffinity: ListTileControlAffinity.leading,
                     value: selectedFertilizers[fert],
                     activeColor: Colors.green,
@@ -261,12 +334,13 @@ class _QuestionsState extends State<Questions_> {
               SizedBox(height: 20),
 
               // Q8: Equipment (multiple choice)
-              Text("7. What equipment do you have available?",
+              Text('questions_page.q7_title'.tr(),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
               Column(
                 children: equipment.map((eq) {
+                  String eqKey = _getEquipmentTranslationKey(eq);
                   return CheckboxListTile(
-                    title: Text(eq),
+                    title: Text(eqKey.isNotEmpty ? eqKey.tr() : eq),
                     controlAffinity: ListTileControlAffinity.leading,
                     value: selectedEquipment[eq],
                     activeColor: Colors.green,
@@ -277,6 +351,27 @@ class _QuestionsState extends State<Questions_> {
                     },
                   );
                 }).toList(),
+              ),
+
+              SizedBox(height: 20),
+
+              // City/Town (mandatory)
+              Text('questions_page.city_town_label'.tr(),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              SizedBox(height: 8),
+              TextField(
+                controller: _cityController,
+                decoration: InputDecoration(
+                  hintText: 'questions_page.city_town_hint'.tr(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  errorText: _cityController.text.isEmpty && _cityController.text.isNotEmpty 
+                      ? 'questions_page.city_town_required'.tr() 
+                      : null,
+                ),
               ),
 
               SizedBox(height: 30),
@@ -294,14 +389,18 @@ class _QuestionsState extends State<Questions_> {
                   ),
                   icon: Icon(Icons.check_circle_outline, color: Colors.white),
                   label: Text(
-                    "SUBMIT",
+                    'questions_page.submit_button'.tr(),
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   onPressed: () async {
                     try{
+                    // Validate city/town is mandatory
+                    String city = _cityController.text.trim();
+                    if (city.isEmpty) {
+                      showError(context, 'questions_page.please_enter_city'.tr());
+                      return;
+                    }
 
-
-                    String name = _nameController.text.trim();
                     List<String> selected_crops = selectedCrops.entries
                         .where((entry) => entry.value)
                         .map((entry) => entry.key)
@@ -319,37 +418,116 @@ class _QuestionsState extends State<Questions_> {
                     print(selected_fertilizers);
                     print(selected_crops);
 
-                    await FirebaseFirestore.instance.collection("Users").doc(widget.uid).
-                    update(
-                    {"crops": selected_crops,
-                    "soil_type": selectedSoil,
-                    "irrigation_frequency": selectedFrequency,
-                    "irrigation_method": "",
-                    "land_size": selectedLandSize,
-                    "fertilizers":selected_fertilizers,
-                    "equipments": selected_equipments,}
-                    );
+                    // Document should already exist (created in login.dart for Google users or register.dart for email users)
+                    // Just update it
+                    await FirebaseFirestore.instance.collection("Users").doc(widget.uid).update({
+                      "crops": selected_crops,
+                      "soil_type": selectedSoil ?? "",
+                      "irrigation_frequency": selectedFrequency ?? "",
+                      "irrigation_method": "",
+                      "land_size": selectedLandSize ?? "",
+                      "fertilizers": selected_fertilizers,
+                      "equipments": selected_equipments,
+                      "city": city,
+                    });
+                    
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNav()));
 
                     } on FirebaseException catch (_) {
-                      showError(context, "Something went wrong, try again");
+                      showError(context, 'questions_page.error_generic'.tr());
                     }
                   },
                 ),
               ),
+              SizedBox(height: 20,)
             ],
           ),
         ),
       ),
     );
   }
+
+  // Helper methods to map English values to translation keys
+  String _getCropTranslationKey(String crop) {
+    switch (crop) {
+      case "Wheat": return 'questions_page.q1_options.wheat';
+      case "Millet": return 'questions_page.q1_options.millet';
+      case "Rice": return 'questions_page.q1_options.rice';
+      case "Legumes": return 'questions_page.q1_options.legumes';
+      case "Cotton": return 'questions_page.q1_options.cotton';
+      case "Sugarcane": return 'questions_page.q1_options.sugarcane';
+      default: return '';
+    }
+  }
+
+  String _getSoilTranslationKey(String soil) {
+    switch (soil) {
+      case "Sandy soil": return 'questions_page.q2_options.sandy';
+      case "Silty soil": return 'questions_page.q2_options.silty';
+      case "Loamy soil": return 'questions_page.q2_options.loamy';
+      case "Peaty soil": return 'questions_page.q2_options.peaty';
+      default: return '';
+    }
+  }
+
+  String _getIrrigationFreqTranslationKey(String freq) {
+    switch (freq) {
+      case "Once a week": return 'questions_page.q3_options.once_week';
+      case "Twice a week": return 'questions_page.q3_options.twice_week';
+      case "Once a month": return 'questions_page.q3_options.once_month';
+      default: return '';
+    }
+  }
+
+  String _getIrrigationMethodTranslationKey(String method) {
+    switch (method) {
+      case "Canal irrigation": return 'questions_page.q4_options.canal';
+      case "Tank irrigation": return 'questions_page.q4_options.tank';
+      case "Wells": return 'questions_page.q4_options.wells';
+      case "Sprinkler irrigation": return 'questions_page.q4_options.sprinkler';
+      case "Rain dependent": return 'questions_page.q4_options.rain_dependent';
+      default: return '';
+    }
+  }
+
+  String _getLandSizeTranslationKey(String size) {
+    switch (size) {
+      case "<1 acre": return 'questions_page.q5_options.less_than_1';
+      case "1-2 acre": return 'questions_page.q5_options.1_to_2';
+      case "> 2 acre": return 'questions_page.q5_options.more_than_2';
+      default: return '';
+    }
+  }
+
+  String _getFertilizerTranslationKey(String fert) {
+    switch (fert) {
+      case "Urea": return 'questions_page.q6_options.urea';
+      case "DAP": return 'questions_page.q6_options.dap';
+      case "Ammonium Sulphate": return 'questions_page.q6_options.ammonium_sulphate';
+      case "Other NPK fertilizer": return 'questions_page.q6_options.other_npk';
+      case "Organic": return 'questions_page.q6_options.organic';
+      default: return '';
+    }
+  }
+
+  String _getEquipmentTranslationKey(String eq) {
+    switch (eq) {
+      case "Seed, drills/planters": return 'questions_page.q7_options.seed_drills';
+      case "Transplanters": return 'questions_page.q7_options.transplanters';
+      case "Tractor with implements": return 'questions_page.q7_options.tractor';
+      case "Harvesters, reapers, ATVs/RTVs/UTVs": return 'questions_page.q7_options.harvesters';
+      case "Others": return 'questions_page.q7_options.others';
+      default: return '';
+    }
+  }
+
   void showError(BuildContext context, String message) {
     final snackBar = SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.transparent,
       content: AwesomeSnackbarContent(
-        title: 'Error!',
+        title: 'questions_page.error_title'.tr(),
         message: message,
         contentType: ContentType.failure,
       ),

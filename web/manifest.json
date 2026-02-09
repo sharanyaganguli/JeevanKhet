@@ -1,13 +1,15 @@
 {
-    "name": "my_app",
-    "short_name": "my_app",
+    "name": "JeevanKhet",
+    "short_name": "JeevanKhet",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#969A2A",
+    "theme_color": "#969A2A",
+    "description": "Smarter Farming, Better Profits. Helps you farm better using less water, the right crops, and fair prices.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
+    "scope": "/",
+    "id": "/",
     "icons": [
         {
             "src": "icons/Icon-192.png",
