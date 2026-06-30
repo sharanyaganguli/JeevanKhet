@@ -46,33 +46,4 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB26-nKc48nAYquwLC9v-op52Im1tIf_a4',
-    appId: '1:1052124070100:android:345e8e2deda65fb11d7b41',
-    messagingSenderId: '1052124070100',
-    projectId: 'farmerapp-45e2e',
-    storageBucket: 'farmerapp-45e2e.firebasestorage.app',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBfd1mr0oin0wKGqbYI2WuiqAOuZeR1g_c',
-    appId: '1:1052124070100:ios:0ad8be6833c614171d7b41',
-    messagingSenderId: '1052124070100',
-    projectId: 'farmerapp-45e2e',
-    storageBucket: 'farmerapp-45e2e.firebasestorage.app',
-    androidClientId: '1052124070100-5j9pfi23dmallh303aapugl1c67o0eo2.apps.googleusercontent.com',
-    iosClientId: '1052124070100-bh8i68j1og2olf34a0l1p1jhq5h2f87r.apps.googleusercontent.com',
-    iosBundleId: 'com.jeevankhet.jeevankhet',
-  );
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBJASPIAoiu-jP4RNGhpGwRgqtwf1khO_g',
-    appId: '1:1052124070100:web:092ddfa95b49c2551d7b41',
-    messagingSenderId: '1052124070100',
-    projectId: 'farmerapp-45e2e',
-    authDomain: 'farmerapp-45e2e.firebaseapp.com',
-    storageBucket: 'farmerapp-45e2e.firebasestorage.app',
-    measurementId: 'G-FVEHZ1N1DV',
-  );
-
 }
