@@ -77,7 +77,7 @@ class _SoilAdvisorState extends State<Soiladvisor> {
       });
 
       Gemini.init(
-        apiKey: "AIzaSyAcXDXPZbCCypVbvy_TBNxTLtD6hXyH6GE",
+        apiKey: "",
         enableDebugging: true,
       );
 
